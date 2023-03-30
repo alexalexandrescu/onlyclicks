@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const toggle = document.getElementById('toggle');
   const status = document.getElementById('status');
   const clickCountsElement = document.getElementById('clickCounts');
-  const totalClicksElement = document.getElementById('totalClicks');
+  const lifetimeClicksElement = document.getElementById('lifetimeClicks');
 
   function sendMessageToContentScript() {
     const isChecked = toggle.checked;
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Retrieve and display the click counts
-  chrome.storage.sync.get(['clickCounts', 'totalClicks'], ({ clickCounts, totalClicks }) => {
+  chrome.storage.sync.get(['clickCounts', 'lifetimeClicks'], ({ clickCounts, lifetimeClicks }) => {
     for (const [username, count] of Object.entries(clickCounts || {})) {
       const li = document.createElement('li');
       li.textContent = `${username}: ${count}`;
@@ -36,8 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     console.log(`Click counts retrieved:`, clickCounts);
 
-    totalClicksElement.textContent = `Lifetime clicks: ${totalClicks || 0}`;
-    console.log(`Total clicks retrieved: ${totalClicks || 0}`);
+    lifetimeClicksElement.textContent = `Lifetime clicks: ${lifetimeClicks || 0}`;
+    console.log(`Lifetime clicks retrieved: ${lifetimeClicks || 0}`);
   });
 
   // Add a delay to make sure the content script is loaded before sending a message
@@ -46,6 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 500);
 });
 
-chrome.storage.sync.get('clickCounts', ({ clickCounts }) => {
+chrome.storage.sync.get(['clickCounts', 'lifetimeClicks'], ({ clickCounts }) => {
   // Calculate the total number of clicks
-  const totalClicks = Object.values(clickCounts || {}).reduce
+  const totalClicks = Object.values(clickCounts || {}).reduce((acc, count) => acc + count, 0);
+
+  // Store the total number of clicks
+  chrome.storage.sync.set({ lifetimeClicks: totalClicks }, () => {
+    console.log(`Lifetime clicks saved: ${totalClicks}`);
+  });
+});

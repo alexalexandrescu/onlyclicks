@@ -1,30 +1,114 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Button Clicker</title>
-    <!-- Load Tailwind CSS from CDN -->
+    <style>
+        body {
+            padding: 4px 2px;
+        }
 
+        h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+        }
+
+        label > span {
+            margin-right: 0.5rem;
+        }
+
+        input[type="checkbox"] {
+            height: 1.25rem;
+            width: 1.25rem;
+            border: 1px solid #d2d6dc;
+            border-radius: 0.25rem;
+            transition: all 0.2s ease-in-out;
+            appearance: none;
+            outline: none;
+            cursor: pointer;
+            background-color: #fff;
+        }
+
+        input[type="checkbox"]:checked {
+            background-color: #3490dc;
+            border-color: #3490dc;
+        }
+
+        input[type="checkbox"]:checked:before {
+            content: "✓";
+            font-size: 0.75rem;
+            line-height: 1rem;
+            color: #fff;
+            display: block;
+            text-align: center;
+        }
+
+        .flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .text-lg {
+            font-size: 1.125rem;
+        }
+
+        .text-gray-600 {
+            color: #718096;
+        }
+
+        .mt-4 {
+            margin-top: 1rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+
+        #clickCounts, #lifetimeClicks {
+            margin-top: 1rem;
+            list-style: none;
+            padding: 0;
+            font-size: 1.125rem;
+        }
+
+        #clickCounts li {
+            margin-bottom: 0.5rem;
+        }
+
+        #lifetimeClicks {
+            margin-top: 2rem;
+        }
+    </style>
     <!-- Load popup.js script -->
     <script src="popup.js"></script>
 </head>
-<body class="py-4 px-2">
-<div class="flex items-center justify-between mb-4">
-    <h1 class="text-2xl font-bold">Button Clicker</h1>
-    <label class="flex items-center">
-        <span class="mr-2">Enable</span>
-        <input type="checkbox" id="toggle" class="form-checkbox h-5 w-5 text-gray-600">
+<body>
+<div class="flex mb-4">
+    <h1>Button Clicker</h1>
+    <label>
+        <span>Enable</span>
+        <input type="checkbox" id="toggle" class="form-checkbox">
     </label>
 </div>
-<div class="flex items-center justify-center">
+
+<div class="flex">
+    <div>
+        <p class="text-lg text-gray-600">Click counts:</p>
+        <ul id="clickCounts"></ul>
+    </div>
+    <p id="lifetimeClicks" class="text-lg text-gray-600"></p>
+</div>
+
+<div class="flex items-center justify-center mt-4">
     <p id="status" class="text-lg text-gray-600"></p>
-</div>
-<div class="flex items-center justify-center mt-4">
-    <ul id="clickCounts" class="text-lg text-gray-600"></ul>
-</div>
-<div class="flex items-center justify-center mt-4">
-    <p id="totalClicks" class="text-lg text-gray-600"></p>
 </div>
 </body>
 </html>

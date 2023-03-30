@@ -24,6 +24,14 @@ function clickButton(button) {
         chrome.storage.sync.set({ clickCounts }, () => {
           console.log(`Button clicked for user ${username}! Total clicks: ${clickCounts[username]}`);
         });
+
+        // Increase the lifetime click count and save it to storage
+        chrome.storage.sync.get('lifetimeClicks', ({ lifetimeClicks }) => {
+          lifetimeClicks = (lifetimeClicks || 0) + 1;
+          chrome.storage.sync.set({ lifetimeClicks }, () => {
+            console.log(`Button clicked! Lifetime clicks: ${lifetimeClicks}`);
+          });
+        });
       });
 
     }, Math.floor(Math.random() * (750 - 500 + 1)) + 500); // random interval between 0.5 and 2 seconds
