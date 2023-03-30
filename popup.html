@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Button Clicker</title>
+    <!-- Load Tailwind CSS from CDN -->
+
+    <!-- Load popup.js script -->
+    <script src="popup.js"></script>
+</head>
+<body class="py-4 px-2">
+<div class="flex items-center justify-between mb-4">
+    <h1 class="text-2xl font-bold">Button Clicker</h1>
+    <label class="flex items-center">
+        <span class="mr-2">Enable</span>
+        <input type="checkbox" id="toggle" class="form-checkbox h-5 w-5 text-gray-600">
+    </label>
+</div>
+<div class="flex items-center justify-center">
+    <p id="status" class="text-lg text-gray-600"></p>
+</div>
+<div class="flex items-center justify-center mt-4">
+    <ul id="clickCounts" class="text-lg text-gray-600"></ul>
+</div>
+<div class="flex items-center justify-center mt-4">
+    <p id="totalClicks" class="text-lg text-gray-600"></p>
+</div>
+</body>
+</html>
