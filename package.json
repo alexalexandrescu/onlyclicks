@@ -1,17 +1,17 @@
 {
   "name": "OnlyLiker",
   "packageManager": "yarn@3.3.1",
-  "dependencies": {
-    "archiver": "^5.3.1",
-    "rimraf": "^4.4.1",
-    "sharp": "^0.32.0",
-    "util": "^0.12.5"
-  },
+  "license": "Unlicense",
+  "private": false,
   "scripts": {
     "build": "node build.js && tsc",
     "watch": "tsc -w"
   },
   "devDependencies": {
+    "archiver": "^5.3.1",
+    "rimraf": "^4.4.1",
+    "sharp": "^0.32.0",
+    "util": "^0.12.5",,
     "@types/chrome": "^0.0.228",
     "typescript": "^5.0.4"
   }

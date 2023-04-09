@@ -14,7 +14,6 @@ async function clearDist() {
 async function copyFiles() {
   const filesToCopy = [
     'manifest.json',
-    'background.js',
     'popup.html',
     'popup.css',
   ];
