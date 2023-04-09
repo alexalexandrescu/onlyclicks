@@ -1,7 +1,7 @@
 {
-  "name": "Button Clicker",
+  "name": "OnlyLiker",
   "version": "1.0",
-  "description": "A Chrome extension that clicks a button on OnlyFans",
+  "description": "Likes models post while you scroll by",
   "manifest_version": 3,
   "background": {
     "service_worker": "background.js"
@@ -12,8 +12,7 @@
   "permissions": [
     "storage",
     "activeTab",
-    "scripting",
-    "tabs"
+    "scripting"
   ],
   "content_scripts": [
     {
