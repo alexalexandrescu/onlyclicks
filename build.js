@@ -14,16 +14,14 @@ async function clearDist() {
 async function copyFiles() {
   const filesToCopy = [
     'manifest.json',
-    'content.ts',
     'background.js',
-    'popup.ts',
     'popup.html',
     'popup.css',
   ];
 
   await Promise.all(
     filesToCopy.map((file) =>
-      fs.promises.copyFile(file, `${distDir}/${file}`).then(() =>
+      fs.promises.copyFile(`src/${file}`, `${distDir}/${file}`).then(() =>
         console.log(`Copied ${file} to dist folder.`)
       )
     )

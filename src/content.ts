@@ -20,7 +20,6 @@ chrome.storage.local.get(
     likedPosts = new Map(clickedPostIds && Object.entries(clickedPostIds) || null);
   }
 );
-
 const batchStorageUpdate = () => {
   console.log('Attempting storage update...');
   chrome.storage.local.get(
@@ -28,7 +27,7 @@ const batchStorageUpdate = () => {
     async ({clickCounts, clickedPostIds}) => {
       console.log('Storage update');
       let stateChanged = false;
-      if (!clickCounts || !compareKeys(usernameLikes, clickCounts)) {
+      if (!clickCounts || !compareMapAndObject(usernameLikes, clickCounts)) {
         console.log('Updating storage for user likes', Object.fromEntries(usernameLikes));
         await chrome.storage.local.set(
           {clickCounts: Object.fromEntries(usernameLikes)}
@@ -44,20 +43,20 @@ const batchStorageUpdate = () => {
         stateChanged = true;
       }
 
-      if(stateChanged) {
+      if (stateChanged) {
         chrome.runtime.sendMessage({type: "storageUpdated"});
       }
     }
   );
 }
 
-const debounce = (func, delay) => {
+const debounce = (func: () => void, delay: number) => {
   console.log('called debounce');
-  let timerId;
-  return (...args) => {
+  let timerId: any;
+  return (...args: []) => {
     clearTimeout(timerId);
     timerId = setTimeout(() => {
-      func.apply(this, args);
+      func.apply(null, args);
     }, delay);
   };
 };
@@ -65,11 +64,12 @@ const callDebounce = debounce(() => {
   batchStorageUpdate();
 }, 3000);
 
-const compareKeys = (map1: Map<string, number>, array2: any[]): boolean => {
-  const map1Keys = Array.from(map1.keys());
-  return map1Keys.length === array2.length && map1Keys.every((key:string, i) => map1.get(key) === array2[key]);
-};
+const compareMapAndObject = (map: Map<string, number>, object: Record<string, number>): boolean => {
+  const mapKeys = Array.from(map.keys());
+  const objectKeys = Object.keys(object);
 
+  return mapKeys.length === objectKeys.length && mapKeys.every((key: string) => map.get(key) === object[key]);
+};
 
 // Function to count the number of times each user's favorite button was clicked
 const countClickedFavoriteButtons = () => {
@@ -79,16 +79,16 @@ const countClickedFavoriteButtons = () => {
   );
   clickedButtons.forEach((button) => {
     const postElement = button.closest(".b-post");
-    const username = postElement.querySelector(
-      ".g-user-username"
-    ).textContent.trim();
-    const postId = postElement.id;
+    if (postElement) {
+      const username = postElement.querySelector(".g-user-username")?.textContent?.trim();
+      const postId = postElement.id;
 
-    if (!likedPosts.has(postId)) {
-      // Add the postId to clickedPostIds to mark it as clicked
-      likedPosts.set(postId, true);
-      usernameLikes.set(username, (usernameLikes.get(username) || 0) + 1);
-      callDebounce();
+      if (!likedPosts.has(postId) && username) {
+        // Add the postId to clickedPostIds to mark it as clicked
+        likedPosts.set(postId, true);
+        usernameLikes.set(username, (usernameLikes.get(username) || 0) + 1);
+        callDebounce();
+      }
     }
   });
 };
@@ -101,9 +101,9 @@ const scrollToNextUnlikedPost = () => {
   while (currentParentIndex < posts.length && !unlikedPostFound) {
     const post = posts[currentParentIndex];
     const button = post.querySelector(favoriteButtonClass);
-    if (!button.classList.contains("m-active")) {
+    if (!button?.classList.contains("m-active")) {
       unlikedPostFound = true;
-      post.scrollIntoView({ behavior: "smooth" });
+      post.scrollIntoView({behavior: "smooth"});
     }
     currentParentIndex++;
   }
@@ -117,29 +117,31 @@ const scrollToNextUnlikedPost = () => {
 const clickButton = () => {
   if (!clickingButton) {
     console.log('clickButton called');
-    const button = clickQueue.shift();
-    button.click();
-    // clickingButton = false;
+    const button = clickQueue.shift() as HTMLElement;
+    if (button) {
+      button.click();
+      // clickingButton = false;
 
-    // Extract the username from the parent b-post element
-    const postElement = button.closest(".b-post");
-    const username = postElement.querySelector(
-      ".g-user-username"
-    ).textContent.trim();
-    const postId = postElement.id;
+      // Extract the username from the parent b-post element
+      const postElement = button.closest(".b-post");
+      if (postElement) {
+        const username = postElement.querySelector(".g-user-username")?.textContent?.trim();
+        const postId = postElement.id;
 
-    // Check if the post has already been clicked and increase the count
+        // Check if the post has already been clicked and increase the count
 
-    if (!likedPosts.has(postId)) {
-      likedPosts.set(postId, true);
-      usernameLikes.set(username, (usernameLikes.get(username) || 0) + 1);
-      callDebounce();
+        if (!likedPosts.has(postId) && username) {
+          likedPosts.set(postId, true);
+          usernameLikes.set(username, (usernameLikes.get(username) || 0) + 1);
+          callDebounce();
 
-      console.log(
-        `Button clicked for user ${username}! Total clicks: ${
-          usernameLikes.get(username)
-        }`
-      );
+          console.log(
+            `Button clicked for user ${username}! Total clicks: ${
+              usernameLikes.get(username)
+            }`
+          );
+        }
+      }
     }
   }
 };
@@ -150,7 +152,7 @@ const buttonClickAppend = (button: Element) => {
     clickQueue.push(button);
     setTimeout(() => {
       clickButton();
-    },Math.floor(Math.random() * (MAX_WAIT_INTERVAL - MIN_WAIT_INTERVAL + 1)) + MIN_WAIT_INTERVAL);
+    }, Math.floor(Math.random() * (MAX_WAIT_INTERVAL - MIN_WAIT_INTERVAL + 1)) + MIN_WAIT_INTERVAL);
   }
 };
 
